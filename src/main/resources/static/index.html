@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Billing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        /* Custom CSS Variables */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            --success-gradient: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            --danger-gradient: linear-gradient(45deg, #ff416c, #ff4b2b);
+            --card-glass: rgba(255, 255, 255, 0.95);
+            --shadow-light: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-hover: 0 12px 40px rgba(31, 38, 135, 0.5);
+            --border-radius: 15px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundMove {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        /* Card Styles */
+        .card {
+            backdrop-filter: blur(20px);
+            background: var(--card-glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Header Styles */
+        .card-header {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem 1.5rem 1rem;
+        }
+
+        .card-header h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin: 0;
+            text-align: center;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6)); }
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline-danger {
+            border: 2px solid #ff4757;
+            color: #ff4757;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--danger-gradient);
+            border-color: transparent;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px 25px 0 0;
+            color: #666;
+            font-weight: 600;
+            margin-right: 5px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Form Styles */
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 16px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            background: white;
+        }
+
+        .table {
+            margin: 0;
+            background: white;
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.01);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-color: rgba(102, 126, 234, 0.1);
+            vertical-align: middle;
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.bg-success {
+            background: var(--success-gradient) !important;
+        }
+
+        .badge.bg-warning {
+            background: var(--secondary-gradient) !important;
+            color: white !important;
+        }
+
+        /* Alert Styles */
+        .alert {
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 500;
+            box-shadow: var(--shadow-light);
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(86, 171, 47, 0.9), rgba(168, 230, 207, 0.9));
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(255, 65, 108, 0.9), rgba(255, 75, 43, 0.9));
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+            color: white;
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Loading Spinner */
+        .spinner-custom {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .table-responsive {
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* Hide/Show Classes */
+        .auth-section {
+            display: none;
+        }
+
+        .auth-section.active {
+            display: block;
+        }
+
+        #mainContent {
+            display: none;
+        }
+
+        #mainContent.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            color: #333;
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            margin-right: 1rem;
+        }
+
+        /* Statistics Cards */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-center bg-transparent">
+                        <h1 class="text-primary mb-0">
+                            <i class="fas fa-bolt"></i> Hệ Thống Quản Lý Điện
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <!-- Authentication Section -->
+                        <div id="authSection">
+                            <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button">
+                                        <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button">
+                                        <i class="fas fa-user-plus"></i> Đăng Ký
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content mt-3" id="authTabsContent">
+                                <!-- Login Form -->
+                                <div class="tab-pane fade show active" id="login" role="tabpanel">
+                                    <form id="loginForm">
+                                        <div class="mb-3">
+                                            <label for="loginEmail" class="form-label">
+                                                <i class="fas fa-envelope"></i> Email
+                                            </label>
+                                            <input type="email" class="form-control" id="loginEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="loginPassword" class="form-label">
+                                                <i class="fas fa-lock"></i> Mật khẩu
+                                            </label>
+                                            <input type="password" class="form-control" id="loginPassword" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Register Form -->
+                                <div class="tab-pane fade" id="register" role="tabpanel">
+                                    <form id="registerForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="regFullName" class="form-label">
+                                                    <i class="fas fa-user"></i> Họ và tên
+                                                </label>
+                                                <input type="text" class="form-control" id="regFullName" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="regEmail" class="form-label">
+                                                    <i class="fas fa-envelope"></i> Email
+                                                </label>
+                                                <input type="email" class="form-control" id="regEmail" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="regPhone" class="form-label">
+                                                    <i class="fas fa-phone"></i> Số điện thoại
+                                                </label>
+                                                <input type="tel" class="form-control" id="regPhone" 
+                                                       pattern="[0-9]{10}" 
+                                                       title="Số điện thoại phải có đúng 10 chữ số"
+                                                       placeholder="0xxxxxxxxx" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="regPassword" class="form-label">
+                                                    <i class="fas fa-lock"></i> Mật khẩu
+                                                </label>
+                                                <input type="password" class="form-control" id="regPassword" 
+                                                       minlength="6" 
+                                                       title="Mật khẩu phải có ít nhất 6 ký tự"
+                                                       placeholder="Tối thiểu 6 ký tự" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="regAddress" class="form-label">
+                                                <i class="fas fa-map-marker-alt"></i> Địa chỉ
+                                            </label>
+                                            <textarea class="form-control" id="regAddress" rows="2" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-user-plus"></i> Đăng Ký
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content Section -->
+                        <div id="mainContent">
+                            <!-- Dashboard Header -->
+                            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="text-gradient mb-1">
+                                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                                    </h3>
+                                    <p class="mb-0 text-muted">Quản lý hệ thống điện thông minh</p>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span id="userInfo" class="user-info"></span>
+                                    <button class="btn btn-outline-danger" onclick="logout()">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Statistics Cards -->
+                            <div class="row mb-4" id="statsCards">
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-file-invoice-dollar"></i>
+                                        </div>
+                                        <div class="stat-number" id="totalBills">0</div>
+                                        <div class="stat-label">Tổng hóa đơn</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-tachometer-alt"></i>
+                                        </div>
+                                        <div class="stat-number" id="totalMeters">0</div>
+                                        <div class="stat-label">Đồng hồ điện</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-bolt"></i>
+                                        </div>
+                                        <div class="stat-number" id="totalConsumption">0</div>
+                                        <div class="stat-label">Tổng tiêu thụ (kWh)</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                        </div>
+                                        <div class="stat-number" id="unpaidAmount">0</div>
+                                        <div class="stat-label">Chưa thanh toán</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Navigation Tabs -->
+                            <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="bills-tab" data-bs-toggle="tab" data-bs-target="#bills" type="button">
+                                        <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="meters-tab" data-bs-toggle="tab" data-bs-target="#meters" type="button">
+                                        <i class="fas fa-tachometer-alt"></i> Đồng hồ điện
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="consumption-tab" data-bs-toggle="tab" data-bs-target="#consumption" type="button">
+                                        <i class="fas fa-chart-line"></i> Tiêu thụ
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tariffs-tab" data-bs-toggle="tab" data-bs-target="#tariffs" type="button">
+                                        <i class="fas fa-money-bill-wave"></i> Biểu giá
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content mt-4" id="mainTabsContent">
+                                <!-- Bills Tab -->
+                                <div class="tab-pane fade show active" id="bills" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-gradient mb-0">
+                                            <i class="fas fa-file-invoice-dollar"></i> Danh sách hóa đơn
+                                        </h5>
+                                        <div>
+                                            <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#generateBillModal" onclick="loadMetersForBill()">
+                                                <i class="fas fa-file-plus"></i> Tạo hóa đơn
+                                            </button>
+                                            <button class="btn btn-outline-primary me-2" onclick="exportData('bills')">
+                                                <i class="fas fa-download"></i> Xuất Excel
+                                            </button>
+                                            <button class="btn btn-primary" onclick="loadBills()">
+                                                <i class="fas fa-sync-alt"></i> Tải lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="billsContent" class="fade-in">
+                                        <div class="text-center py-5">
+                                            <div class="spinner-custom mx-auto mb-3"></div>
+                                            <p class="text-muted">Đang tải dữ liệu...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Meters Tab -->
+                                <div class="tab-pane fade" id="meters" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-gradient mb-0">
+                                            <i class="fas fa-tachometer-alt"></i> Danh sách đồng hồ điện
+                                        </h5>
+                                        <div>
+                                            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addMeterModal">
+                                                <i class="fas fa-plus"></i> Thêm mới
+                                            </button>
+                                            <button class="btn btn-primary" onclick="loadMeters()">
+                                                <i class="fas fa-sync-alt"></i> Tải lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="metersContent" class="fade-in">
+                                        <div class="text-center py-5">
+                                            <div class="spinner-custom mx-auto mb-3"></div>
+                                            <p class="text-muted">Đang tải dữ liệu...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Consumption Tab -->
+                                <div class="tab-pane fade" id="consumption" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-gradient mb-0">
+                                            <i class="fas fa-chart-line"></i> Lịch sử tiêu thụ điện
+                                        </h5>
+                                        <div>
+                                            <button class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#addConsumptionModal" onclick="loadMetersForConsumption()">
+                                                <i class="fas fa-plus"></i> Ghi chỉ số
+                                            </button>
+                                            <button class="btn btn-outline-info me-2" onclick="viewChart()">
+                                                <i class="fas fa-chart-bar"></i> Biểu đồ
+                                            </button>
+                                            <button class="btn btn-primary" onclick="loadConsumption()">
+                                                <i class="fas fa-sync-alt"></i> Tải lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="consumptionContent" class="fade-in">
+                                        <div class="text-center py-5">
+                                            <div class="spinner-custom mx-auto mb-3"></div>
+                                            <p class="text-muted">Đang tải dữ liệu...</p>
+                                        </div>
+                                    </div>
+                                    <!-- Chart Container -->
+                                    <div id="chartContainer" style="display: none;" class="mt-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Biểu đồ tiêu thụ điện theo thời gian</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="consumptionChart" width="400" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tariffs Tab -->
+                                <div class="tab-pane fade" id="tariffs" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-gradient mb-0">
+                                            <i class="fas fa-money-bill-wave"></i> Biểu giá điện
+                                        </h5>
+                                        <div>
+                                            <button class="btn btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#calculatorModal" onclick="loadTariffsForCalculator()">
+                                                <i class="fas fa-calculator"></i> Tính toán
+                                            </button>
+                                            <button class="btn btn-primary" onclick="loadTariffs()">
+                                                <i class="fas fa-sync-alt"></i> Tải lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="tariffsContent" class="fade-in">
+                                        <div class="text-center py-5">
+                                            <div class="spinner-custom mx-auto mb-3"></div>
+                                            <p class="text-muted">Đang tải dữ liệu...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 1050; margin-top: 20px;"></div>
+
+    <!-- Add Meter Modal -->
+    <div class="modal fade" id="addMeterModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.95);">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-plus-circle text-success me-2"></i>Thêm đồng hồ điện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMeterForm">
+                        <div class="mb-3">
+                            <label for="meterNumber" class="form-label">Số đồng hồ</label>
+                            <input type="text" class="form-control" id="meterNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="meterType" class="form-label">Loại đồng hồ</label>
+                            <select class="form-select" id="meterType" required>
+                                <option value="">Chọn loại đồng hồ</option>
+                                <option value="SINGLE_PHASE">Một pha</option>
+                                <option value="THREE_PHASE">Ba pha</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="installationDate" class="form-label">Ngày lắp đặt</label>
+                            <input type="date" class="form-control" id="installationDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="initialReading" class="form-label">Chỉ số ban đầu (kWh)</label>
+                            <input type="number" class="form-control" id="initialReading" min="0" step="0.01" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-success" onclick="addMeter()">
+                        <i class="fas fa-save me-1"></i>Thêm đồng hồ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Consumption Modal -->
+    <div class="modal fade" id="addConsumptionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.95);">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-tachometer-alt text-info me-2"></i>Ghi chỉ số đồng hồ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addConsumptionForm">
+                        <div class="mb-3">
+                            <label for="consumptionMeterId" class="form-label">Chọn đồng hồ</label>
+                            <select class="form-select" id="consumptionMeterId" required>
+                                <option value="">Chọn đồng hồ điện</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="currentReading" class="form-label">Chỉ số hiện tại (kWh)</label>
+                            <input type="number" class="form-control" id="currentReading" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="readingDate" class="form-label">Ngày ghi chỉ số</label>
+                            <input type="date" class="form-control" id="readingDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Ghi chú (tùy chọn)</label>
+                            <textarea class="form-control" id="notes" rows="3" placeholder="Nhập ghi chú nếu có..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-info" onclick="addConsumption()">
+                        <i class="fas fa-save me-1"></i>Ghi chỉ số
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Details Modal -->
+    <div class="modal fade" id="billDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.95);">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-file-invoice text-primary me-2"></i>Chi tiết hóa đơn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="billDetailsContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" id="payBillBtn" onclick="payBill()" style="display: none;">
+                        <i class="fas fa-credit-card me-1"></i>Thanh toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Bill Modal -->
+    <div class="modal fade" id="generateBillModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.95);">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-file-invoice-dollar text-warning me-2"></i>Tạo hóa đơn mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="generateBillForm">
+                        <div class="mb-3">
+                            <label for="billMeterId" class="form-label">Chọn đồng hồ</label>
+                            <select class="form-select" id="billMeterId" required>
+                                <option value="">Chọn đồng hồ điện</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="billingPeriod" class="form-label">Kỳ hóa đơn</label>
+                            <input type="month" class="form-control" id="billingPeriod" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dueDate" class="form-label">Hạn thanh toán</label>
+                            <input type="date" class="form-control" id="dueDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-warning" onclick="generateBill()">
+                        <i class="fas fa-file-plus me-1"></i>Tạo hóa đơn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tariff Calculator Modal -->
+    <div class="modal fade" id="calculatorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.95);">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-calculator text-info me-2"></i>Máy tính tiền điện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="calculatorForm">
+                        <div class="mb-3">
+                            <label for="calcKwh" class="form-label">Số điện tiêu thụ (kWh)</label>
+                            <input type="number" class="form-control" id="calcKwh" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="calcTariffId" class="form-label">Chọn biểu giá</label>
+                            <select class="form-select" id="calcTariffId" required>
+                                <option value="">Chọn loại biểu giá</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-info w-100" onclick="calculateElectricityBill()">
+                                <i class="fas fa-calculator me-2"></i>Tính toán
+                            </button>
+                        </div>
+                        <div id="calculationResult" class="mt-3" style="display: none;">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-money-bill-wave me-2"></i>Kết quả tính toán:</h6>
+                                <div id="calculationDetails"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
