@@ -31,14 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# Application specific
-application.properties
-!application.properties.template
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp

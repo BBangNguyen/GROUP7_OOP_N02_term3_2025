@@ -27,7 +27,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints - không cần authentication
-                .requestMatchers("/api/customers/register", "/api/customers/login", "/api/customers/init-sample-data").permitAll()
+                .requestMatchers("/api/customers/register", "/api/customers/login").permitAll()
                 .requestMatchers("/api/tariffs/**").permitAll() // Cho phép xem tariff công khai
                 .requestMatchers("/api/tariffs/current").permitAll() // Cho phép xem tariff hiện tại
                 // Static resources
