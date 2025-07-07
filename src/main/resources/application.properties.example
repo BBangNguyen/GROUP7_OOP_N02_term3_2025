@@ -1,0 +1,41 @@
+spring.application.name=ElectricityBilling
+
+# Database Configuration - Aiven MySQL
+# Replace these values with your Aiven service details
+spring.datasource.url=jdbc:mysql://mysql-29560c77-bangnguyen-aiven.b.aivencloud.com:10173/db-tiendien?ssl-mode=REQUIRED
+spring.datasource.username=avnadmin
+spring.datasource.password=YOUR_ACTUAL_PASSWORD_HERE
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# SSL Configuration for Aiven
+spring.datasource.hikari.connection-init-sql=SELECT 1
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+
+# Server Configuration
+server.port=8080
+server.servlet.context-path=/
+
+# Logging
+logging.level.com.example.ElectricityBilling=DEBUG
+logging.level.org.springframework.security=DEBUG
+
+# Thymeleaf Configuration
+spring.thymeleaf.cache=false
+spring.thymeleaf.enabled=true
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+# Static Resources
+spring.web.resources.static-locations=classpath:/static/
+spring.web.resources.cache.cachecontrol.max-age=3600
+
+# Session Configuration
+server.servlet.session.cookie.http-only=true
+server.servlet.session.cookie.secure=false
+server.servlet.session.timeout=30m
