@@ -39,4 +39,69 @@ Yêu cầu:
    +![image](https://github.com/user-attachments/assets/9f3d6b20-2d82-48c6-be1e-4dd855c81424)
 2.2  Activity Diagram
    ![image](https://github.com/user-attachments/assets/b2282887-b8c9-4ba2-b9a9-03aea0078833)
+
+
+
+
+
+
+
+
+
+
+Lưu đồ thuật toán : <img width="985" height="1583" alt="ZLPHRnj547w_Np6ObyHjNAT9sf8yK2Ts6jFK2RPR2GcfsjoDxQLtksPlpwsf-eGG0hL0QILKH0Kj89ug-WRK4Yz1_H_k7u2VmExUPNAndIZxaFXcTcQ__RxPsRqSQwPq4eNGPh8gHNTBLZcAcnizBdhjNkBVh8HTgRZkHPxtbkvXXC1knmjICT55Bxx5HPyf5i4UyszrbKn4i253gU3jpKkRxsn" src="https://github.com/user-attachments/assets/13f074cb-9aaf-461e-81c2-3b87f6ad05dd" />
+
+
+
+
+
+
+   Yêu cầu số 6-7 :
+ Thành viên nhóm
++ Nguyễn Hoàng Giang MSV 22010370
++ Nguyễn Văn Bằng MSV 22010952
+
+ Tiêu đề BTL: Electricity bill management system
+Xây dựng ứng dụng quản lý tiền điện 
+
+ Chức năng chính của hệ thống (Yêu cầu số 5)
+Quản lý hóa đơn tiền điện: Tạo hóa đơn tiền điện dựa trên chỉ số đồng hồ điện và tính toán chi phí theo biểu giá điện.
+
+ Phân tích thuật toán thành các chức năng nhỏ:
+1. Quản lý đồng hồ điện**Thêm, xóa, sửa thông tin đồng hồ điện
+3. Tạo hóa đơn Tự động tạo hóa đơn dựa trên chỉ số tiêu thụ
+4. Tính toán chi phí: Áp dụng biểu giá điện để tính toán tổng chi phí
+5. Thanh toán hóa đơn: Xử lý thanh toán và cập nhật trạng thái hóa đơn
+
+ Yêu cầu số 6: Bắt lỗi (Try-Catch-Finally)
+Đã thêm khối bắt lỗi vào tất cả các phần:
+-  Backend Controllers (CustomerController, BillingController, MeterController)
+-  Service Layer (BillingService, CustomerService, MeterService)
+-  Frontend JavaScript (Authentication, API calls, Form handling)
+
+ Yêu cầu số 7: Phân công công việc UI/MVC
+
+ Phân chia công việc cho các thành viên:
+
+ Sinh viên A - Nguyễn Hoàng Giang (MSV 22010370) và Nguyễn Văn Bằng :
+Chức năng: Quản lý đồng hồ điện
+- Controller: MeterController.java
+- View: Giao diện quản lý đồng hồ điện (Meters Tab)
+- Model: Meter.java, Consumption.java
+- Nhiệm vụ cụ thể:
+  - Thêm/xóa/sửa đồng hồ điện
+  - Ghi chỉ số tiêu thụ điện hàng tháng
+  - Biểu đồ tiêu thụ điện theo thời gian
+
+Sinh viên B - Nguyễn Văn Bằng (MSV 22010952):
+Chức năng: Quản lý hóa đơn và thanh toán và ghi chỉ số tiêu thụ
+- Controller: BillingController.java
+- View: Giao diện quản lý hóa đơn (Bills Tab)
+- Model: Billing.java, Payment.java
+- Nhiệm vụ cụ thể:
+  - Tạo hóa đơn tiền điện tự động
+  - Hiển thị danh sách hóa đơn
+  - Xử lý thanh toán hóa đơn
+  - Xuất báo cáo Excel
+
    
