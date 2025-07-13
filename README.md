@@ -32,12 +32,12 @@ Yêu cầu:
 1.Sơ đố khối yêu cầu
 1.1 UML Component Diagram
 
-<img width="954" height="526" alt="image" src="https://github.com/user-attachments/assets/df55b477-7f11-4a4c-92e5-43b2613fc4c6" />
+<img width="2379" height="1311" alt="image" src="https://github.com/user-attachments/assets/063f5eca-dadb-483b-b340-ec634b7fde2e" />
 
 
 2. Sơ đồ Behavioural Diagram:
 2.1 Sequence Diagram
-<img width="2379" height="1311" alt="image" src="https://github.com/user-attachments/assets/063f5eca-dadb-483b-b340-ec634b7fde2e" />
+<img width="979" height="2213" alt="image" src="https://github.com/user-attachments/assets/b2e45637-8eaa-4f39-a5cf-cea5edfd73c1" />
 
 
 2.2  Activity Diagram
