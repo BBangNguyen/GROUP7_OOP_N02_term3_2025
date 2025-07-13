@@ -37,10 +37,12 @@ Yêu cầu:
 
 2. Sơ đồ Behavioural Diagram:
 2.1 Sequence Diagram
-<img width="662" height="1496" alt="image" src="https://github.com/user-attachments/assets/0dfa7308-6901-4d33-97a9-3ab2a9eae1f1" />
+<img width="2379" height="1311" alt="image" src="https://github.com/user-attachments/assets/063f5eca-dadb-483b-b340-ec634b7fde2e" />
+
 
 2.2  Activity Diagram
- <img width="954" height="436" alt="image" src="https://github.com/user-attachments/assets/e81e8e00-b015-4b59-b5cc-f041ea1225e0" />
+<img width="2560" height="1170" alt="image" src="https://github.com/user-attachments/assets/757374e4-53b0-4a6d-857c-857f6285e778" />
+
 
 
 
